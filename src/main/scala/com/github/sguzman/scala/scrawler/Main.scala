@@ -14,6 +14,11 @@ object Main {
     val response = request.asString
     val success = response.code
     Preconditions.checkArgument(success == 200, "Cookie was not valid")
-    println(response.body)
+
+    val url2 = "https://partners.uber.com/p3/money/statements/all_data/"
+    val request2 = Http(url2).header("Cookie", argv.cookie)
+    val response2 = request2.asString
+    println(response2.code)
+    println(response2.body)
   }
 }
