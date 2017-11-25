@@ -1,6 +1,9 @@
 package com.github.sguzman.scala.scrawler
 
 import com.github.sguzman.scala.scrawler.jcommander.Args
+import com.github.sguzman.scala.scrawler.jsontypecheck.StatementListObject
+import io.circe.generic.auto._
+import io.circe.parser._
 import org.feijoas.mango.common.base.Preconditions
 
 import scalaj.http.Http
@@ -18,7 +21,8 @@ object Main {
     val url2 = "https://partners.uber.com/p3/money/statements/all_data/"
     val request2 = Http(url2).header("Cookie", argv.cookie)
     val response2 = request2.asString
-    println(response2.code)
-    println(response2.body)
+
+    val jsonTypes = decode[Array[StatementListObject]](response2.body)
+    println(jsonTypes)
   }
 }
