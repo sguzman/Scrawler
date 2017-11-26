@@ -2,6 +2,7 @@ package com.github.sguzman.scala.scrawler
 
 import java.util.UUID
 
+import com.github.sguzman.scala.scrawler.aes.AES
 import com.github.sguzman.scala.scrawler.jsontypecheck.StatementListObject
 import com.github.sguzman.scala.scrawler.jsontypecheck.`return`.Trips
 import com.github.sguzman.scala.scrawler.jsontypecheck.statement.Statement
@@ -14,20 +15,10 @@ import org.feijoas.mango.common.base.Preconditions
 import scalaj.http.{Http, HttpResponse}
 
 object Main {
-  var json = "{}"
   def main(args: Array[String]): Unit = {
     val cookie = System.getenv("COOKIE")
     val port = System.getenv("PORT")
-
-    Server.listen(port.toInt) {
-      case GET at url"/" =>
-        Ok(json).addHeaders(
-          (HttpString("Access-Control-Allow-Origin"), HttpString("*")),
-          (HttpString("Access-Control-Allow-Headers"), HttpString("Origin, X-Requested-With, Content-Type, Accept"))
-
-      case _ =>
-        NotFound
-    }
+    val key = System.getenv("AES_KEY")
 
     val response = getStatus(cookie)
     val success = response.code
@@ -43,8 +34,19 @@ object Main {
     val trips = tripUuids.par.map(trp).filter(_.isDefined).map(_.get)
 
     val tripMe = Trips(trips.toArray)
-    this.json = new GsonBuilder().create.toJson(tripMe)
+    val json = new GsonBuilder().create.toJson(tripMe)
+    val encJson = AES.encrypt(key, json)
     println("done")
+
+    Server.listen(port.toInt) {
+      case GET at url"/" =>
+        Ok(encJson).addHeaders(
+          (HttpString("Access-Control-Allow-Origin"), HttpString("*")),
+          (HttpString("Access-Control-Allow-Headers"), HttpString("Origin, X-Requested-With, Content-Type, Accept")))
+
+      case _ =>
+        NotFound
+    }
   }
 
   def getTrip(cookie: String, uuid: UUID): Option[Trip] = {
