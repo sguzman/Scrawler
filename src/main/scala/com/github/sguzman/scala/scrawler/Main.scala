@@ -21,7 +21,10 @@ object Main {
 
     Server.listen(port.toInt) {
       case GET at url"/" =>
-        Ok(json)
+        Ok(json).addHeaders(
+          (HttpString("Access-Control-Allow-Origin"), HttpString("*")),
+          (HttpString("Access-Control-Allow-Headers"), HttpString("Origin, X-Requested-With, Content-Type, Accept"))
+
       case _ =>
         NotFound
     }
