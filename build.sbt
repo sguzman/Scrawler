@@ -24,7 +24,6 @@ resolvers ++= Seq(
   Resolver.sbtPluginRepo("releases"),
   Resolver.jcenterRepo,
   "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
-  "jmcardon at bintray" at "https://dl.bintray.com/jmcardon/tsec"
 )
 
 /** Source Dependencies */
@@ -33,7 +32,6 @@ libraryDependencies ++= Seq(
   "com.google.code.gson" % "gson" % "2.8.2",
   "org.feijoas" % "mango_2.12" % "0.14",
   "com.criteo.lolhttp" % "lolhttp_2.12" % "0.8.1",
-  "io.github.jmcardon" %% "tsec-password" % "0.0.1-M5"
 )
 
 /** Make sure to fork on run */
