@@ -28,7 +28,6 @@ resolvers ++= Seq(
 
 /** Source Dependencies */
 libraryDependencies ++= Seq(
-  "com.beust" % "jcommander" % "1.72",
   "org.scalaj" % "scalaj-http_2.12" % "2.3.0",
   "com.google.code.gson" % "gson" % "2.8.2",
   "org.feijoas" % "mango_2.12" % "0.14",
